@@ -1,8 +1,9 @@
-package com.example.prora.myfirstkotlin
+package com.example.prora.myfirstkotlin.activities
 
 import android.app.FragmentManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.example.prora.myfirstkotlin.R
 import com.example.prora.myfirstkotlin.fragments.NewsFragment
 
 class MainActivity : AppCompatActivity() {
@@ -15,7 +16,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun changeFragment(f: android.support.v4.app.Fragment, cleanStack: Boolean = false) {
+    private fun changeFragment(f: android.support.v4.app.Fragment, cleanStack: Boolean = false) {
         var fragmentTransaction = supportFragmentManager.beginTransaction()
         if (cleanStack) {
             clearBackStack()
@@ -27,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         fragmentTransaction.commit()
     }
 
-    fun clearBackStack() {
+    private fun clearBackStack() {
         var fragmentManager = supportFragmentManager
         if (fragmentManager.backStackEntryCount > 0) {
             var first = fragmentManager.getBackStackEntryAt(0)

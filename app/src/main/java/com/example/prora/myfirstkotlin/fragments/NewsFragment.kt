@@ -9,16 +9,22 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.prora.myfirstkotlin.R
 import com.example.prora.myfirstkotlin.commons.inflate
+import kotlinx.android.synthetic.main.news_fragment.*
 
 
 class NewsFragment : Fragment() {
-    private var newsList: RecyclerView? = null
+
+    private val newList by lazy {
+        news_list
+    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = container?.inflate(R.layout.news_fragment)
-        newsList = view?.findViewById(R.id.news_list)
-        newsList?.setHasFixedSize(true)
-        newsList?.layoutManager = LinearLayoutManager(context)
-        return view
+        return container?.inflate(R.layout.news_fragment)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        newList.setHasFixedSize(true)
+        newList.layoutManager = LinearLayoutManager(context)
     }
 }
