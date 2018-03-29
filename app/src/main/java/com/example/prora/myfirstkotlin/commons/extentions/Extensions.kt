@@ -15,8 +15,8 @@ fun ViewGroup.inflate(layoutId: Int, attackToRoot: Boolean = false): View {
 }
 
 fun ImageView.loadImg(url: String) {
-    if (TextUtils.isEmpty(url)) {
-        Glide.with(context).load(R.mipmap.ic_launcher).into(this)
+    if (TextUtils.isEmpty(url) || !url.contains("https")) {
+        Glide.with(context).load(R.drawable.ic_launcher_background).into(this)
     } else {
         Glide.with(context).load(url).into(this)
     }
