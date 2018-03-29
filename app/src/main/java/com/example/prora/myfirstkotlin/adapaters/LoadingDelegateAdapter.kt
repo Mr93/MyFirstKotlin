@@ -3,7 +3,7 @@ package com.example.prora.myfirstkotlin.adapaters
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.example.prora.myfirstkotlin.R
-import com.example.prora.myfirstkotlin.commons.inflate
+import com.example.prora.myfirstkotlin.commons.extentions.inflate
 
 class LoadingDelegateAdapter : ViewTypeDelegateAdapter {
 
