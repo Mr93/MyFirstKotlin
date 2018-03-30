@@ -48,7 +48,6 @@ class NewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         notifyItemRangeRemoved(0, getLastPostion())
         items.addAll(news)
         items.add(loadingItem)
-//        notifyItemRangeInserted(0, items.size)
         notifyDataSetChanged()
     }
 

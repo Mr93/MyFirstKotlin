@@ -24,6 +24,10 @@ class NewsFragment : RxBaseFragment() {
 
     val TAG = "NewsFragment"
 
+    companion object {
+        private val KEY_REDDIT_NEWS = "KEY_REDDIT_NEWS"
+    }
+
     private var redditNews: RedditNews? = null
 
     private var infinityScrollListener: InfinityScrollListener? = null
@@ -36,18 +40,31 @@ class NewsFragment : RxBaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        news_list.setHasFixedSize(true)
-        val linearLayout = LinearLayoutManager(context)
-        news_list.layoutManager = linearLayout
-        news_list.clearOnScrollListeners()
-        infinityScrollListener = InfinityScrollListener({ requestNews() }, linearLayout)
-        news_list.addOnScrollListener(infinityScrollListener)
-        swipe_refresh.setOnRefreshListener { reLoadNews() }
-        swipe_refresh.setColorSchemeResources(R.color.colorPrimary, android.R.color.holo_green_dark, android.R.color
-                .holo_orange_dark, android.R.color.holo_blue_dark)
+        news_list.apply {
+            news_list.setHasFixedSize(true)
+            val linearLayout = LinearLayoutManager(context)
+            news_list.layoutManager = linearLayout
+            news_list.clearOnScrollListeners()
+            infinityScrollListener = InfinityScrollListener({ requestNews() }, linearLayout)
+            news_list.addOnScrollListener(infinityScrollListener)
+            swipe_refresh.setOnRefreshListener { reLoadNews() }
+            swipe_refresh.setColorSchemeResources(R.color.colorPrimary, android.R.color.holo_green_dark, android.R.color
+                    .holo_orange_dark, android.R.color.holo_blue_dark)
+        }
         initAdapter()
-        if (savedInstanceState == null) {
+        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_REDDIT_NEWS)) {
+            redditNews = savedInstanceState.get(KEY_REDDIT_NEWS) as RedditNews
+            (news_list.adapter as NewsAdapter).clearAndAddNews(redditNews!!.news)
+        } else {
             requestNews()
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        val news = (news_list.adapter as NewsAdapter).getNews()
+        if (redditNews != null && news.isNotEmpty()) {
+            outState.putParcelable(KEY_REDDIT_NEWS, redditNews?.copy(news = news))
         }
     }
 
