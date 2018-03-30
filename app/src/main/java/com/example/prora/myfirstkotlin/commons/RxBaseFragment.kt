@@ -13,6 +13,10 @@ open class RxBaseFragment() : Fragment() {
 
     override fun onPause() {
         super.onPause()
+        clearSubScription()
+    }
+
+    fun clearSubScription() {
         if (!subscriptions.isUnsubscribed) {
             subscriptions.unsubscribe()
         }

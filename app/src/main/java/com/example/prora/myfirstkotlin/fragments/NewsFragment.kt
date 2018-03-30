@@ -2,23 +2,31 @@ package com.example.prora.myfirstkotlin.fragments
 
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.prora.myfirstkotlin.R
 import com.example.prora.myfirstkotlin.adapaters.NewsAdapter
+import com.example.prora.myfirstkotlin.commons.InfinityScrollListener
+import com.example.prora.myfirstkotlin.commons.RedditNews
 import com.example.prora.myfirstkotlin.commons.RxBaseFragment
 import com.example.prora.myfirstkotlin.commons.extentions.inflate
 import com.example.prora.myfirstkotlin.features.news.NewsManager
 import kotlinx.android.synthetic.main.news_fragment.*
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import rx.subscriptions.CompositeSubscription
 
 
 class NewsFragment : RxBaseFragment() {
 
     val TAG = "NewsFragment"
+
+    private var redditNews: RedditNews? = null
+
+    private var infinityScrollListener: InfinityScrollListener? = null
 
     private val newsManager by lazy { NewsManager() }
 
@@ -29,20 +37,49 @@ class NewsFragment : RxBaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         news_list.setHasFixedSize(true)
-        news_list.layoutManager = LinearLayoutManager(context)
+        val linearLayout = LinearLayoutManager(context)
+        news_list.layoutManager = linearLayout
+        news_list.clearOnScrollListeners()
+        infinityScrollListener = InfinityScrollListener({ requestNews() }, linearLayout)
+        news_list.addOnScrollListener(infinityScrollListener)
+        swipe_refresh.setOnRefreshListener { reLoadNews() }
+        swipe_refresh.setColorSchemeResources(R.color.colorPrimary, android.R.color.holo_green_dark, android.R.color
+                .holo_orange_dark, android.R.color.holo_blue_dark)
         initAdapter()
         if (savedInstanceState == null) {
             requestNews()
         }
     }
 
-    private fun requestNews() {
-        val subscription = newsManager.getNews()
+    private fun reLoadNews() {
+        clearSubScription()
+        subscriptions = CompositeSubscription()
+        val subscription = newsManager.getNews("")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { retrievedNews ->
-                            (news_list.adapter as NewsAdapter).addNews(retrievedNews)
+                            redditNews = retrievedNews
+                            (news_list.adapter as NewsAdapter).clearAndAddNews(retrievedNews.news)
+                            swipe_refresh.isRefreshing = false
+                            infinityScrollListener?.resetPreviousTotal()
+                        },
+                        { e ->
+                            Snackbar.make(news_list, e.message ?: "", Snackbar.LENGTH_LONG).show()
+                            swipe_refresh.isRefreshing = false
+                        }
+                )
+        subscriptions.add(subscription)
+    }
+
+    private fun requestNews() {
+        val subscription = newsManager.getNews(redditNews?.after ?: "")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        { retrievedNews ->
+                            redditNews = retrievedNews
+                            (news_list.adapter as NewsAdapter).addNews(retrievedNews.news)
                         },
                         { e ->
                             Snackbar.make(news_list, e.message ?: "", Snackbar.LENGTH_LONG).show()
