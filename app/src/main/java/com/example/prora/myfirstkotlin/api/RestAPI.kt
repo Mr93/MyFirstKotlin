@@ -7,9 +7,13 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 class RestAPI() {
     private val redditApi: RedditApi
 
+    companion object {
+        val BASE_URL = "https://www.reddit.com"
+    }
+
     init {
         val retrofit = Retrofit.Builder()
-                .baseUrl("https://www.reddit.com")
+                .baseUrl(BASE_URL)
                 .addConverterFactory(MoshiConverterFactory.create())
                 .build()
         redditApi = retrofit.create(RedditApi::class.java)

@@ -1,11 +1,13 @@
 package com.example.prora.myfirstkotlin.adapaters
 
+import android.content.Context
 import android.support.v4.util.SparseArrayCompat
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
+import com.example.prora.myfirstkotlin.activities.NewsDetailActivity
 import com.example.prora.myfirstkotlin.commons.RedditNewsItem
 
-class NewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class NewsAdapter(var context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var items: ArrayList<ViewType>
 
@@ -17,7 +19,7 @@ class NewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     init {
         delegateAdapters.put(AdapterConstant.LOADING, LoadingDelegateAdapter())
-        delegateAdapters.put(AdapterConstant.NEWS, NewsDelegateAdapter())
+        delegateAdapters.put(AdapterConstant.NEWS, NewsDelegateAdapter({ url: String -> onNewsItemClicked(url) }))
         items = ArrayList()
         items.add(loadingItem)
     }
@@ -57,4 +59,8 @@ class NewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     private fun getLastPostion() = if (items.lastIndex == -1) 0 else items.lastIndex
+
+    private fun onNewsItemClicked(url: String) {
+        context.startActivity(NewsDetailActivity.getMyIntent(context, url))
+    }
 }

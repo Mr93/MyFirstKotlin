@@ -13,9 +13,10 @@ class RedditChildrenResponse(val data: RedditNewsData)
 class RedditNewsData(
         val author: String,
         val title: String,
-        val numberComments: Int,
+        val num_comments: Int,
         val created: Long,
         val thumbnail: String,
-        val url: String
+        val url: String,
+        val permalink: String
 )
 

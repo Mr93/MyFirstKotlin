@@ -2,6 +2,7 @@
 
 package com.example.prora.myfirstkotlin.commons.extentions
 
+import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -21,3 +22,10 @@ fun ImageView.loadImg(url: String) {
         Glide.with(context).load(url).into(this)
     }
 }
+
+//fun <T:RecyclerView.ViewHolder> T.listen(event:(position : Int, type: Int)-> Unit) : T{
+//    itemView.setOnClickListener {
+//        event.invoke(adapterPosition, itemViewType)
+//    }
+//    return this
+//}

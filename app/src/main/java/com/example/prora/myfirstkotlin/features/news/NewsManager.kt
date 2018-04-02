@@ -16,7 +16,8 @@ class NewsManager(private val api: RestAPI = RestAPI()) {
                 val dataResponse = response.body().data
                 val news = dataResponse.children.map {
                     val item = it.data
-                    RedditNewsItem(item.author, item.title, item.numberComments, item.created, item.thumbnail, item.url)
+                    RedditNewsItem(item.author, item.title, item.num_comments, item.created, item.thumbnail, item
+                            .url, item.permalink)
                 }
                 val redditNews = RedditNews(
                         dataResponse.after ?: "",

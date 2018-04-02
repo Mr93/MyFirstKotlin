@@ -43,18 +43,22 @@ data class RedditNewsItem(
         val numComments: Int,
         val created: Long,
         val thumbnail: String,
-        val url: String
+        val url: String,
+        val permalink: String
+
 ) : ViewType, Parcelable {
+    override fun getViewType() = AdapterConstant.NEWS
+
     constructor(parcel: Parcel) : this(
             parcel.readString(),
             parcel.readString(),
             parcel.readInt(),
             parcel.readLong(),
             parcel.readString(),
+            parcel.readString(),
             parcel.readString()) {
     }
 
-    override fun getViewType() = AdapterConstant.NEWS
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(author)
         parcel.writeString(title)
@@ -62,6 +66,7 @@ data class RedditNewsItem(
         parcel.writeLong(created)
         parcel.writeString(thumbnail)
         parcel.writeString(url)
+        parcel.writeString(permalink)
     }
 
     override fun describeContents(): Int {

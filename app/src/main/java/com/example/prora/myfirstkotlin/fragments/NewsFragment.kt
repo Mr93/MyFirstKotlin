@@ -41,12 +41,12 @@ class NewsFragment : RxBaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         news_list.apply {
-            news_list.setHasFixedSize(true)
+            setHasFixedSize(true)
             val linearLayout = LinearLayoutManager(context)
-            news_list.layoutManager = linearLayout
-            news_list.clearOnScrollListeners()
+            layoutManager = linearLayout
+            clearOnScrollListeners()
             infinityScrollListener = InfinityScrollListener({ requestNews() }, linearLayout)
-            news_list.addOnScrollListener(infinityScrollListener)
+            addOnScrollListener(infinityScrollListener)
             swipe_refresh.setOnRefreshListener { reLoadNews() }
             swipe_refresh.setColorSchemeResources(R.color.colorPrimary, android.R.color.holo_green_dark, android.R.color
                     .holo_orange_dark, android.R.color.holo_blue_dark)
@@ -107,7 +107,7 @@ class NewsFragment : RxBaseFragment() {
 
     private fun initAdapter() {
         if (news_list.adapter == null) {
-            news_list.adapter = NewsAdapter()
+            news_list.adapter = NewsAdapter(context!!)
         }
     }
 }
